@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 
@@ -23,11 +23,20 @@ export class AppComponent implements OnInit {
   title = "sma-mobile";
   appVer = environment.version;
   sidebarVisible: boolean = false;
-  constructor(private config: PrimeNGConfig,
+  networkStatus!:any
+  constructor(
+    private config: PrimeNGConfig,
     private router: Router,
+    private ngZone: NgZone
    ) { }
 
-  ngOnInit() {
+   async ngOnInit() {
+    /* Network.addListener("networkStatusChange", (status:any) => {
+      this.ngZone.run(() => {
+        // This code will run in Angular's execution context
+        this.networkStatus = status.connected ? "Online" : "Offline";
+      });
+    }); */
   }
   goHome() {
     this.router.navigate(['/dashboard']);
