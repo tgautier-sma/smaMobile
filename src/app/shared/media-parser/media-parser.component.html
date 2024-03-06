@@ -1,0 +1,82 @@
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<p-tabView>
+    <p-tabPanel header="Charger les médias">
+        <p-fileUpload name="files[]" (onUpload)="onUpload($event)" (uploadHandler)="uploader($event)" [multiple]="true"
+            [accept]="'image/*'" [maxFileSize]="1000000" chooseLabel="Choisir" uploadLabel="Envoyer"
+            [customUpload]="true" cancelLabel="Annuler">
+            <ng-template pTemplate="content">
+                <ul *ngIf="uploadedFiles.length">
+                    <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+                </ul>
+            </ng-template>
+            <ng-template let-file pTemplate="file" class="flex flex-row flex-wrap">
+                <p-image [src]="file.objectURL.changingThisBreaksApplicationSecurity" [alt]="file.name" width="150"
+                    [preview]="true" [pTooltip]="tooltipContent">
+                </p-image>
+                <ng-template #tooltipContent>
+                    <div class="flex align-items-center">
+                        <span class="text-xs">{{file.name}} - {{ file.size }} bytes</span>
+                    </div>
+                </ng-template>
+            </ng-template>
+        </p-fileUpload>
+    </p-tabPanel>
+    <p-tabPanel>
+        <ng-template pTemplate="header">
+            <i class="pi pi-refresh" (click)="getUploadedFiles()"></i>
+            <span class="pl-2">Média stockés ({{fileList.length}})</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+            <p-carousel #car [value]="fileList" [numVisible]="5" [numScroll]="5" [responsiveOptions]="responsiveOptions"
+                [circular]="true" [autoplayInterval]="autoPlay">
+                <ng-template pTemplate="header">
+                    <div class="flex-auto p-2">
+                        <label class="mb-2 block" for="autoPlay">Interval de défilement (ms)</label>
+                        <p-inputNumber [(ngModel)]="autoPlay" [showButtons]="true" inputId="autoPlay" [step]="1000"
+                            [min]="0" [max]="8000" (ngModelChange)="setAutoPlay()"></p-inputNumber>
+                    </div>
+                </ng-template>
+                <ng-template let-file pTemplate="item">
+                    <div class="media-item">
+                        <div class="media-item-content">
+                            <div class="p-mb-3">
+                                <p-image [src]="file.url" alt="image" width="250px" [preview]="true"></p-image>
+                            </div>
+                            <div>
+                                <div class="mb-0 text-xs text-primary">{{file.name}}</div>
+                                <div class="mb-0 text-xs"><b>h:</b>{{file.height}} <b>l:</b>{{file.width}}</div>
+                                <div class="mb-0 text-xs text-primary">{{file.mime}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-carousel>
+        </ng-template>
+    </p-tabPanel>
+    <p-tabPanel>
+        <ng-template pTemplate="header">
+            <span class="pl-2">Image Url</span>
+
+        </ng-template>
+        <ng-template pTemplate="content">
+            <app-request-select (urlSelected)="getMediaFromApi($event)" class="w-auto"></app-request-select>
+            <div *ngIf="mediaContent" class="flex flex-column p-2 ">
+                <div class="flex align-items-center justify-content-center">
+                    <p-image [src]="getSafe(mediaContent)" [preview]="true" alt="Image" height="250"></p-image>
+                </div>
+                <div class="flex align-items-center justify-content-center">
+                    <p-button icon="pi pi-check" label="Selectionner" (click)="selectImage()"></p-button>
+                </div>
+            </div>
+        </ng-template>
+    </p-tabPanel>
+    <p-tabPanel>
+        <ng-template pTemplate="header">
+            <span class="pl-2">Librairies</span>
+         
+        </ng-template>
+        <ng-template pTemplate="content">
+            <app-media-nasa></app-media-nasa>
+        </ng-template>
+    </p-tabPanel>
+</p-tabView>

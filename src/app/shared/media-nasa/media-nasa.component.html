@@ -1,0 +1,59 @@
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+Search : <app-request-select (urlSelected)="getData($event)" [search]="search" [keyStore]="keyStore"
+    class="w-auto"></app-request-select>
+<div class="flex flex-column">
+    <p-card *ngFor="let item of medias">
+        <div *ngFor="let link of item['links']">
+            <img *ngIf="link.render==='image'" [src]="link.href" height="200" (click)="getMediaData(item)">
+        </div>
+        <div *ngFor="let data of item['data']">
+            <h5>{{data.title}}</h5>
+            <p class="text-xs">{{data.description}}</p>
+            <p class="text-xs">Id: {{data.nasa_id}}</p>
+            <p class="text-xs">Format : {{data.media_type}}, crée le {{data.date_created}}</p>
+            <div class="card flex justify-content-center gap-2">
+                <p-tag *ngFor="let key of data.keywords" [value]="key" severity="info" [rounded]="true"></p-tag>
+            </div>
+        </div>
+    </p-card>
+</div>
+<p-galleria [value]="currentMedias" [(visible)]="displayCustom" [responsiveOptions]="responsiveOptions"
+    [containerStyle]="{ 'max-width': '850px' }" [numVisible]="7" [circular]="true" [fullScreen]="true"
+    [showIndicators]="false" [showIndicatorsOnItem]="true"
+    [showItemNavigators]="true" [showThumbnails]="true" [(activeIndex)]="activeIndex">
+    <ng-template pTemplate="item" let-item>
+        <img [src]="item.url" class="custom-image" />
+<!-- 
+        <div [ngSwitch]="item.type">
+            <div *ngSwitchCase="'image'">
+                <img [src]="item.url" class="custom-image" />
+            </div>
+            <div *ngSwitchCase="'video'">
+                <video controls width="100%">
+                    <source [src]="item.url" type="video/mp4" />
+                </video>
+            </div>
+            <div *ngSwitchCase="'text'">
+                <pre [innerHTML]="getText(item.url)"></pre>
+            </div>
+            <div *ngSwitchCase="'json'"> </div>
+            <div *ngSwitchDefault>
+                No data to show !
+            </div>
+        </div>
+-->
+    </ng-template>
+    <ng-template pTemplate="thumbnail" let-item>
+        <div class="grid grid-nogutter justify-content-center">
+            <img [src]="item.url" class="custom-thumbail" />
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer" let-item>
+        <div class="custom-galleria-footer">
+            <span  class="title-container">
+                <span>{{ activeIndex + 1 }}/{{ currentMedias.length }} - </span>
+                <span class="title">{{ item?.type }}</span>
+            </span>
+        </div>
+    </ng-template>
+</p-galleria>

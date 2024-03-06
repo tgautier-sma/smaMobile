@@ -1,0 +1,48 @@
+<p-fileUpload #fileXls name="fileCsv" [customUpload]="true" (onSelect)="onFileSelected($event)"
+  (onClear)="clearData($event)" (uploadHandler)="sendData($event)" accept=".xlsx" [auto]="false" chooseLabel="Choisir"
+  uploadLabel="Valider" cancelLabel="Annuler" mode="advanced" class="p-buttom-sm">
+  <ng-template pTemplate="toolbar">
+    <button *ngIf="loading" title="loading" pButton type="button" icon="pi pi-spin pi-spinner" iconPos="left"
+      class="p-buttom-sm"></button>
+    <p-toggleButton [onLabel]="'Titre des colonnes à la ligne N°'" [offLabel]="'Pas de titre de colonnes'"
+      [onIcon]="'pi pi-check'" [offIcon]="'pi pi-times'" name="firstLine" [(ngModel)]="firstLine" size="small" class="p-buttom-sm">
+    </p-toggleButton>
+    <p-inputNumber *ngIf="firstLine" inputId="headerLineNumber" [(ngModel)]="headerLineNumber" [min]="1" [max]="100"
+      [step]="1" [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal"
+      decrementButtonClass="p-button-danger" incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus"
+      decrementButtonIcon="pi pi-minus" name="headerLineNumber" (ngModelChange)="displaySh(wsName)">
+    </p-inputNumber>
+  </ng-template>
+  <ng-template pTemplate="content" let-files>
+    <p-tabView *ngIf="display" [scrollable]="true" (onChange)="handleChange($event)">
+      <p-tabPanel [header]="item" *ngFor="let item of sheets; let i = index" [selected]="i == 0" [closable]="true">
+        <ng-template pTemplate="content">
+          <p-table [value]="data" [loading]="loading" [lazy]="true" styleClass="p-datatable-sm p-datatable-gridlines"
+            responsiveLayout="scroll" [resizableColumns]="true" columnResizeMode="expand" responsiveLayout="scroll"
+            [scrollable]="true" scrollHeight="55vh" [rows]="100" [virtualScroll]="true">
+            <ng-template pTemplate="header">
+              <tr *ngIf="firstLine">
+                <th *ngFor="let col of headers" pResizableColumn>
+                  {{col}}
+                </th>
+              </tr>
+              <tr *ngIf="!firstLine">
+                <th *ngFor="let col of headers;let idx=index" pResizableColumn>
+                  Colonne {{idx}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row let-ri="rowIndex">
+              <tr *ngIf="firstLine && ri!==0">
+                <td *ngFor="let col of data[0];let idx=index">{{row[idx]}}</td>
+              </tr>
+              <tr *ngIf="!firstLine">
+                <td *ngFor="let col of data[0];let idx=index">{{row[idx]}}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+      </p-tabPanel>
+    </p-tabView>
+  </ng-template>
+</p-fileUpload>

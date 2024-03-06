@@ -1,0 +1,24 @@
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<div class="grid">
+    <div class="col-12 md:col-4">
+        <p-fileUpload #fileTxt name="fileText" accept="application/pdf" [customUpload]="true"
+            (onSelect)="onFileSelected($event)" (on-progress)="onProgress($event)" (onClear)="clearData($event)"
+            (uploadHandler)="sendData($event)" [auto]="false" chooseLabel="Choisir" uploadLabel="Valider"
+            cancelLabel="Annuler" mode="advanced" class="p-buttom-sm">
+            <ng-template pTemplate="toolbar">
+                <button *ngIf="loading" title="loading" pButton type="button" icon="pi pi-spin pi-spinner"
+                    iconPos="left" class="p-buttom-sm"></button>
+            </ng-template>
+            <ng-template pTemplate="content" let-files>
+                <!-- <div id="jsoneditor"></div> -->
+
+            </ng-template>
+        </p-fileUpload>
+    </div>
+    <div class="col-12 md:col-8">
+        <div *ngIf="data">
+            <pdf-viewer [src]="data" [render-text]="true" [original-size]="false"
+                style="width: 100%; height: 78vh"></pdf-viewer>
+        </div>
+    </div>
+</div>

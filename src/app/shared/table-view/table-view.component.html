@@ -1,0 +1,221 @@
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<div *ngIf="tableItems.length >= 1 && cols.length>=1" class="p-0">
+  <p-table #dt [columns]="cols" [value]="tableItems" immutable=false styleClass="p-datatable-sm" [rows]="100"
+    [globalFilterFields]="colsFilter" [loading]="loading" (onFilter)="onFilter($event)"
+    [scrollable]="true" scrollHeight="56vh" [virtualScroll]="false" 
+    [resizableColumns]="true" [reorderableColumns]="true" sortMode="multiple" selectionMode="multiple"
+    [(selection)]="selectedItems" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnSelect($event)"
+    [(contextMenuSelection)]="selectedItems" [contextMenu]="cm">
+  
+    <ng-template pTemplate="caption">
+      <div class="flex space-between flex-wrap">
+        <div class="p-input-icon-left p-ml-auto">
+          <i class="pi pi-filter-slash" (click)="clear(dt)"></i>
+          <input pInputText name="search" ngDefaultControl type="search" (input)="filterData(search)"
+            [(ngModel)]="search" (keydown.enter)="filterData(search)" placeholder="Chercher..."
+            class="p-inputtext-sm max-w-10rem" />
+        </div>
+        <p-button type="button" icon="pi pi-chart-bar" [text]="true" severity="info"
+          (click)="countByField()"></p-button>
+        <div *ngIf="pagination" class="flex align-items-center justify-content-center">
+          <p-button type="button" styleClass="p-button-text">{{pagination.page}}</p-button>
+          <p-button type="button" icon="pi pi-chevron-left" (click)="prev()" styleClass="p-button-text"></p-button>
+          <p-button type="button" icon="pi pi-chevron-right" (click)="next()" styleClass="p-button-text"></p-button>
+          <p-button type="button" styleClass="p-button-text">{{pagination.pageCount}} pages</p-button>
+          <p-button type="button" styleClass="p-button-text">{{pagination.total}} items</p-button>
+        </div>
+        <span class="spacer"></span>
+        <span class="flex align-items-center justify-content-center">
+          <i class="pi pi-list"></i>&nbsp;{{count}}&nbsp;
+          <i class="pi pi-search"></i>&nbsp;{{countFilter}}
+          <i class="pi pi-check"></i>&nbsp;{{selectedItems.length}}
+        </span>
+        <span class="spacer"></span>
+        <p-button [rounded]="false" [text]="true" (click)="op.toggle($event)" icon="pi pi-ellipsis-v"></p-button>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th style="width: 2rem"><p-tableHeaderCheckbox (click)="onSelectAll($event)"></p-tableHeaderCheckbox></th>
+        <th>#</th>
+        <th pResizableColumn pReorderableColumn *ngFor="let col of columns" [pSortableColumn]="col.code">
+          <p-columnFilter *ngIf="filter" type="text" [field]="col.code" display="menu"></p-columnFilter>
+          <p-sortIcon *ngIf="sort" [field]="col.code"></p-sortIcon>
+          {{col.label}}
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-ri="rowIndex" let-editing="editing">
+      <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="ri" [pContextMenuRow]="rowData">
+        <td>
+          <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+          <i class="pi pi-info-circle pl-2" (click)="showRecord(ri)"></i>
+        </td>
+        <td>{{ri+1}}</td>
+        <td *ngFor="let col of columns" class="textStyle">
+          <span [ngSwitch]="col.type">
+            <span *ngSwitchCase="'date'">
+              {{rowData | getPropertie:col.code | date:'short'}}
+            </span>
+            <span *ngSwitchCase="'boolean'">
+              <i *ngIf='getValue(rowData,col.code)==="true"' class="pi pi-check-square"></i>
+              <i *ngIf='getValue(rowData,col.code)!=="true"' class="pi pi-stop"></i>
+            </span>
+            <span *ngSwitchDefault>
+              <button title="link" pButton pRipple type="button" icon="pi pi-link"
+                class="p-button-rounded p-button-success p-button-text p-button-sm" *ngIf="col.link"
+                (click)="navigateItem(ri,rowData,col)"></button>
+              <span [innerHTML]="rowData | getPropertie:col.code"></span>
+            </span>
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8">Aucune donnée trouvée. Vérifier la source de données.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<div *ngIf="tableItems.length === 1">
+  <ngx-json-viewer *ngIf="tableItems[0]" [json]="tableItems[0]"></ngx-json-viewer>
+  <span *ngIf="!tableItems[0]">Pas de données.</span>
+</div>
+
+<p-overlayPanel #op>
+  <ng-template pTemplate="content">
+    <h4>Options</h4>
+    <table>
+      <tr (click)="countByField();">
+        <td colspan="2">Statistiques</td>
+      </tr>
+      <tr>
+        <td>
+          <hr>Edition
+        </td>
+        <td class="text-right"><p-checkbox [(ngModel)]="editMode" [binary]="true" inputId="editMode"></p-checkbox></td>
+      </tr>
+      <tr>
+        <td colspan="2">Activation par colonne</td>
+      </tr>
+      <tr>
+        <td>Filtres</td>
+        <td class="text-right"><p-checkbox [(ngModel)]="filter" [binary]="true" inputId="filterId"></p-checkbox></td>
+      </tr>
+      <tr>
+        <td>Tri</td>
+        <td class="text-right"><p-checkbox [(ngModel)]="sort" [binary]="true" inputId="sortId"></p-checkbox></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <hr>Exports des données
+        </td>
+      </tr>
+      <tr>
+        <td>Filtrées </td>
+        <td class="text-right">
+          <p-inputSwitch [(ngModel)]="saveFiltered"></p-inputSwitch>
+      </tr>
+      <tr (click)="exportExcel()">
+        <td>Format Excel</td>
+        <td class="text-right">
+          <i class="pi pi-file-excel" style="font-size: 1rem"></i>
+      </tr>
+      <tr (click)="exportCsv()">
+        <td>Format CSV (;)</td>
+        <td class="text-right">
+          <i class="pi pi-file-export" style="font-size: 1rem"></i>
+      </tr>
+      <tr (click)="exportJson()">
+        <td>Format Json</td>
+        <td class="text-right">
+          <i class="pi pi-file-export" style="font-size: 1rem"></i>
+      </tr>
+      <tr (click)="exportXML()">
+        <td>Format XML</td>
+        <td class="text-right">
+          <i class="pi pi-file-export" style="font-size: 1rem"></i>
+      </tr>
+    </table>
+  </ng-template>
+</p-overlayPanel>
+
+<p-contextMenu #cm [model]="menus"></p-contextMenu>
+
+<p-dialog [(visible)]="editVisible" [style]="{width: '50vw'}" [breakpoints]="{ '960px': '75vw' }" [draggable]="false"
+  [resizable]="true" [maximizable]="true" (onHide)="cancelModif()">
+  <ng-template pTemplate="header">{{rowEdited ? 'Modification ' : 'Détails '}} #{{selectedItemIdx}}</ng-template>
+  <ng-template pTemplate="content">
+    <div *ngIf="selectedItems">
+      <div class="field col-12 md:col-12" *ngFor="let field of dataModel; let idx=index">
+        <div class="p-input-filled p-inputtext-sm">
+          <label [for]="field.name" class="block">{{field.label}}
+            <i class="pi pi-copy ml-2" [cdkCopyToClipboard]="editedItem[field.id]"
+              (cdkCopyToClipboardCopied)="copyToEnded($event)"></i>
+            <i class="pi pi-filter ml-2" (click)="setFilter(editedItem[field.id])"></i>
+          </label>
+          <input [type]="field.type" pInputText [id]="field.type" [(ngModel)]="editedItem[field.id]" required autofocus
+            aria-label="field" class="w-full" [disabled]="!rowEdited" />
+          <small class="p-error" *ngIf="submitted && !editedItem[field.name]">Champ Obligatoire.</small>
+          <small [id]="'help_'+idx" class="block">{{field.help}}</small>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button *ngIf="rowEdited" severity="success" [text]="true" icon="pi pi-check" (click)="saveModif()"
+      label="Valider" pAutoFocus [autofocus]="true"></p-button>
+    <p-button *ngIf="selectedItems" severity="danger" [text]="true" icon="pi pi-times" (click)="cancelModif()"
+      label="Annuler" pAutoFocus [autofocus]="false"></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="countVisible" [style]="{width: '60vw'}" [breakpoints]="{ '960px': '75vw' }" [draggable]="false"
+  [resizable]="true" [maximizable]="true" (onHide)="cancelModif()">
+  <ng-template pTemplate="header">
+    <i class="pi pi-chart-bar"></i>
+    Statistiques
+    <span>{{countFilter}}/{{count}}</span>
+  </ng-template>
+  <ng-template pTemplate="content">
+    <p-accordion class="w-full">
+      <p-accordionTab *ngFor="let f of stats">
+        <ng-template pTemplate="header">
+          <span class="flex align-items-center gap-2 w-full">
+            <span>{{f.field}}</span>
+            <span class="font-bold white-space-nowrap" class="ml-auto">{{f.count | countPropertie}}</span>
+          </span>
+        </ng-template>
+        <table class="table_stats">
+          <tr *ngFor="let item of f.count | keyvalue" (click)="setFilter(item.key)">
+            <td style="width:90%">{{item.key}}</td>
+            <td>{{item.value}}</td>
+          </tr>
+        </table>
+      </p-accordionTab>
+    </p-accordion>
+    <!-- <ngx-json-viewer *ngIf="stats" [json]="stats" class="text-xs viewer"></ngx-json-viewer> -->
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button severity="success" [text]="true" icon="pi pi-check" (click)="countVisible=false" label="Valider"
+      pAutoFocus [autofocus]="true"></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="recordVisible" [style]="{width: '60vw'}" [breakpoints]="{ '960px': '75vw' }" [draggable]="false"
+  [resizable]="true" [maximizable]="true">
+  <ng-template pTemplate="header">
+    <i class="pi pi-info-circle"></i>
+    Détail des données
+  </ng-template>
+  <ng-template pTemplate="content">
+    <ngx-json-viewer *ngIf="editedItem" [json]="editedItem" class="text-xs viewer" [depth]="1"></ngx-json-viewer>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button severity="success" [text]="true" icon="pi pi-check" (click)="recordVisible=false" label="Ok" pAutoFocus
+      [autofocus]="true"></p-button>
+  </ng-template>
+</p-dialog>

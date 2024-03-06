@@ -1,0 +1,9 @@
+.wrapper {
+    display: flex;
+    max-height: 70vh;
+    width: auto;
+    align-items: center;
+    justify-content: center;
+    // inexplicable/unknown extra space is rendered, causing scrollbars to show up 
+    overflow: hidden;
+  }

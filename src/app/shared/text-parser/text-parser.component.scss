@@ -1,0 +1,23 @@
+:host ::ng-deep .p-fileupload .p-fileupload-buttonbar {
+  .p-button {
+    padding-left: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .p-inputtext {
+    padding-right: 0.25rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    max-width: 3rem;
+    margin-left: -0.5rem;
+  }
+
+  .p-fileupload .p-fileupload-row>div {
+    padding: 0.1rem 1rem;
+  }
+  
+}
+:host ::ng-deep .p-fileupload .p-fileupload-content {
+  padding: 0;
+}

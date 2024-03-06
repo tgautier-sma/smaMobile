@@ -1,0 +1,31 @@
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<p-fileUpload #fileTxt name="fileText" [customUpload]="true" (onSelect)="onFileSelected($event)"
+  (onClear)="clearData($event)" (uploadHandler)="sendData($event)" [auto]="false" chooseLabel="Choisir"
+  uploadLabel="Valider" cancelLabel="Annuler" mode="advanced" class="p-buttom-sm">
+  <ng-template pTemplate="toolbar">
+    <button *ngIf="loading" title="loading" pButton type="button" icon="pi pi-spin pi-spinner" iconPos="left"
+      class="p-buttom-sm"></button>
+  </ng-template>
+  <ng-template pTemplate="content" let-files>
+    <!-- <div id="jsoneditor"></div> -->
+    <div *ngIf="data">
+      <div class="flex flex-column gap-2" *ngIf="jsonFormat">
+        <p-inputGroup>
+          <input pInputText id="selectedPath" type="search" aria-describedby="exportName-help"
+            [(ngModel)]="selectedPath" (keydown.enter)="applyPath()"/>
+          <button type="button" pButton icon="pi pi-search" class="p-button-info" (click)="applyPath()"></button>
+          <button type="button" pButton icon="pi pi-replay" class="p-button-danger" (click)="resetPath()"></button>
+        </p-inputGroup>
+        <small id="exportName-help">Chemin d'accés aux données</small>
+      </div>
+      <hr>
+      <div *ngIf="jsonFormat">
+        <ngx-json-viewer class="text-sm" [json]="data" [depth]="2"></ngx-json-viewer>
+      </div>
+      <div *ngIf="!jsonFormat" class="card">
+      <p-editor [(ngModel)]="text" [readonly]="false" [style]="{ height: '600px' }"></p-editor>
+    </div>
+      
+    </div>
+  </ng-template>
+</p-fileUpload>

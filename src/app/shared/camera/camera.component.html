@@ -1,0 +1,66 @@
+<div *ngIf="isCameraExist; else noCameraExist">
+    <div class="flex flex-column">
+        <div class="flex align-items-center justify-content-center">
+            <div class="shadow-7 wrapper" (window:resize)="onResize($event)">
+                <webcam *ngIf="showWebcam" [height]="height" [width]="width" [trigger]="triggerObservable"
+                    (imageCapture)="handleImage($event)" [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
+                    [videoOptions]="videoOptions" [imageQuality]="imageQuality"
+                    [mirrorImage]="mirrorImage" (cameraSwitched)="cameraWasSwitched($event)"
+                    (initError)="handleInitError($event)">
+                </webcam>
+                
+            </div>
+        </div>
+        <div class="flex align-items-center justify-content-center p-2">
+            <span class="text-xs w-full">WxH :{{width}}x{{height}}</span>
+            <p-splitButton icon="pi pi-circle-fill" (onClick)="triggerSnapshot()" [model]="items"></p-splitButton>
+            <p-button *ngIf="multipleWebcamsAvailable" pRipple icon="pi pi-sync" (click)="showNextWebcam(true)">
+            </p-button>
+            </div>
+            <div *ngIf="errors.length > 0">
+                <h4>Message d'erreurs</h4>
+                <ul *ngFor="let error of errors">
+                    <li class="pt-0">{{ error.message}} : {{error.mediaStreamError}}</li>
+                    </ul>
+            </div>
+    </div>
+
+</div>
+
+<ng-template #noCameraExist>
+    Camera device not available
+</ng-template>
+
+<p-dialog header="Périphérique" [(visible)]="showParams" [modal]="true" [maximizable]="true"
+    [style]="{ width: '50rem',height: '80vh' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+    <div class="field grid">
+        <label for="deviceId" class="col-12 mb-2 md:col-2 md:mb-0" style="width:100px">Périphérique</label>
+        <div class="col-12 md:col-10">
+            <p-dropdown [options]="mediaDevices" [(ngModel)]="deviceId" inputId="deviceId" optionLabel="label"
+                optionValue="deviceId" [showClear]="true" placeholder="Select a device"
+                (onChange)="showNextWebcam(deviceId)" class="w-full">
+            </p-dropdown>
+        </div>
+    </div>
+    <div class="field grid">
+        <label for="mirror" class="col-12 mb-2 md:col-2 md:mb-0" style="width:100px">Mirroring</label>
+        <div class="col-12 md:col-10">
+            <p-dropdown [options]="mirrorImageOptions" [(ngModel)]="mirrorImage" inputId="mirror" optionLabel="label"
+                optionValue="code" [showClear]="true" placeholder="Select an option" class="w-full">
+            </p-dropdown>
+        </div>
+    </div>
+    <div class="field grid">
+        <label for="imageQuality" class="col-12 mb-2 md:col-2 md:mb-0" style="width:100px">Qualité</label>
+        <div class="col-12 md:col-10">
+            <p-inputNumber [(ngModel)]="imageQuality" [showButtons]="true" [min]="0" [max]="1" buttonLayout="horizontal"
+                inputId="imageQuality" spinnerMode="horizontal" [step]="0.1" decrementButtonClass="p-button-danger"
+                incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus"
+                decrementButtonIcon="pi pi-minus"></p-inputNumber>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-check" (click)="showParams = false" label="Ok" pAutoFocus [autofocus]="true"></p-button>
+    </ng-template>
+</p-dialog>

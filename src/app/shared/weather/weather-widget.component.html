@@ -1,0 +1,34 @@
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<div class="w-full">
+  <p-carousel [value]="currentData" [circular]="true" (onPage)="onCityChange($event)" [page]="page" >
+    <ng-template let-city pTemplate="item">
+      <!-- {{city|json}} -->
+      <div *ngIf="checkData(city)">
+        {{city.city}}-Actualisé à {{city.data.refreshAt | date:'mediumTime'}}
+        <p class="text-xs">Données météo actualisées toutes les {{timerRefresh/60}} minutes</p>
+        <p-card >
+          <div class="card-body">
+            <div class="text-2xl">{{city.data.name}}, {{city.data.sys.country}}</div>
+            <div class="text-xl mb-1 text-muted">{{city.data.weather[0].main}}-{{city.data.weather[0].description}}
+            </div>
+            <div class=" mb-2 text-muted">{{city.data.dt*1000 | date:'fullDate'}} à {{city.data.dt*1000 |
+              date:'fullTime'}}</div>
+            <hr>
+            <div class="text-xl">Températures</div>
+            <div class="text-base">{{ city.data.main.temp}}°C, ressenti {{ city.data.main.feels_like}}°C</div>
+            <div class="text-base">{{ city.data.main.temp_min}}°C min, {{ city.data.main.temp_max}}°C max</div>
+            <hr>
+            <div class="text-base">Pression : {{city.data.main.pressure}}</div>
+            <div class="text-base">Humidité : {{city.data.main.humidity}}% </div>
+            <div class="text-base">Vent : {{city.data.wind.speed}} km/h, orienté à {{city.data.wind.deg}}° </div>
+            <div class="text-base">Visibilité {{city.data.visibility}} mètres</div>
+            <div class="text-base" *ngIf="city.data.clouds">Couverture nuageuse à {{city.data.clouds.all}}% </div>
+            <hr>
+            <p class="text-sm">Le soleil de lève à {{city.data.sys.sunrise*1000 | date:'longTime'}} et se couche à
+              {{city.data.sys.sunset*1000 | date:'longTime'}}</p>
+          </div>
+        </p-card>
+      </div>
+    </ng-template>
+  </p-carousel>
+</div>
