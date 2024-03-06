@@ -1,0 +1,51 @@
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<div class="flex justify-content-center">
+    <div class="flex align-items-center justify-content-center">
+    </div>
+    <div class="flex align-items-center justify-content-center w-full md:w-6">
+        <div class="card flex flex-column justify-content-center flex-wrap w-full">
+            <p-card  class="">
+                <ng-template pTemplate="header">
+                    <div class="text-center mb-3">
+                        <img alt="Card" src="assets/labo.png" class="w-2" />
+                        <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
+                        <span class="text-600 font-medium line-height-3">Don't have an account?</span>
+                        <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer" (click)="onRegister()">Create
+                            today!</a>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="content">
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                        <label for="email" class="block text-900 font-medium mb-2">Email</label>
+                        <input formControlName="username" id="email" type="email" placeholder="Email address" pInputText autocomplete="email"
+                            class="w-full mb-3">
+        
+                        <label for="password" class="block text-900 font-medium mb-2">Password</label>
+                        <input formControlName="password" id="password" type="password" autocomplete="current-password" placeholder="Password"
+                            pInputText
+                            class="w-full mb-3">
+        
+                        <label for="token" class="block text-900 font-medium mb-2">Token</label>
+                        <input formControlName="token" id="token" type="number" placeholder="Token" pInputText
+                            class="w-full mb-3" (keydown.enter)="onSubmit()">
+        
+                        <div class="flex align-items-center justify-content-between mb-6">
+                            <div class="flex align-items-center">
+                                <p-checkbox id="rememberme" [binary]="true" styleClass="mr-2"></p-checkbox>
+                                <label for="rememberme" class="text-900">Remember me</label>
+                            </div>
+                            <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer"
+                                (click)="onForgot()">Forgot
+                                password?</a>
+                        </div>
+                    </form>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <button (click)="onSubmit()" pButton pRipple title="Sign In" label="Sign In" icon="pi pi-user"></button>
+                    <p-button (click)="onCancel()" label="Cancel" icon="pi pi-times" styleClass="p-button-secondary"
+                        [style]="{ 'margin-left': '.5em' }"></p-button>
+                </ng-template>
+            </p-card>
+        </div>
+    </div>
+</div>

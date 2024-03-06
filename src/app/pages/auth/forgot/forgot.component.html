@@ -1,0 +1,22 @@
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<div class="flex justify-content-center flex-wrap p-5">
+    <p-card [style]="{ width: '360px' }">
+        <div class="text-center mb-5">
+            <img src="assets/icon.png" alt="Image" height="50" class="mb-3">
+            <div class="text-900 text-3xl font-medium mb-3">Vous avez oublié votre mot de passe ?</div>
+            <div>Nous allons vous envoyer un code temporaire à votre adresse mail. Vous devrez ensuite changer votre mot
+                de passe.</div>
+        </div>
+        <div class="w-full">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <label for="email" class="block text-900 font-medium mb-2">Veuillez indiquer votre adresse mail</label>
+                <input formControlName="username" id="email" type="email" placeholder="Email address" pInputText
+                    class="w-full mb-3">
+                <button (click)="onSubmit()" pButton pRipple title="Init password" label="Init password"
+                    icon="pi pi-user" class="w-auto p-button-danger m-2"></button>
+                <button (click)="onCancel()" pButton pRipple title="Cancel" label="Annuler" class="w-auto m-2"></button>
+            </form>
+        </div>
+
+    </p-card>
+</div>

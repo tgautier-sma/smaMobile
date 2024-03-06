@@ -1,0 +1,22 @@
+<p-card header="Vos options">
+    <app-menu-function [items]="optItems" (setItem)="applyItem($event)"></app-menu-function>
+    <div [ngSwitch]="activeOpt.id">
+        <div *ngSwitchCase="'fn1'">{{activeOpt.label}}</div>
+        <div *ngSwitchCase="'fn2'">{{activeOpt.label}}</div>
+        <div *ngSwitchCase="'fn3'">{{activeOpt.label}}</div>
+        <div *ngSwitchCase="'fn4'">{{activeOpt.label}}</div>
+        <div *ngSwitchCase="'fn5'">{{activeOpt.label}}</div>
+        <div *ngSwitchDefault>No data</div>
+    </div>
+</p-card>
+<p-card header="Vos infos">
+    <app-menu-function [items]="infItems" (setItem)="applyInfo($event)"></app-menu-function>
+    <div [ngSwitch]="activeInf.id">
+        <div *ngSwitchCase="'fn1'">{{activeInf.label}}</div>
+        <div *ngSwitchCase="'fn2'">{{activeInf.label}}</div>
+        <div *ngSwitchCase="'fn3'">{{activeInf.label}}</div>
+        <div *ngSwitchCase="'fn4'">{{activeInf.label}}</div>
+        <div *ngSwitchCase="'fn5'">{{activeInf.label}}</div>
+        <div *ngSwitchDefault>No data</div>
+    </div>
+</p-card>

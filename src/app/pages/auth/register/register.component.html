@@ -1,0 +1,105 @@
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<div class="text-center mb-5">
+    <img src="assets/icon.png" alt="Image" height="50" class="mb-3">
+    <div class="text-900 text-3xl font-medium mb-3">Welcome </div>
+</div>
+
+<div class="flex justify-content-center flex-wrap p-5">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <p-card header="Nouveau compte"
+            subheader="Toutes ces informations sont obligatoires pour la création du compte." class="w-min md:w-max">
+            <ng-template pTemplate="content">
+                <div class="grid pl-5">
+                    <div class="col-12 md:col-6 ">
+                        <div class="field grid">
+                            <span class="p-float-label w-full pr-5">
+                                <input title="firstname" type="text" id="firstName" formControlName="firstName" pInputText
+                                    aria-describedby="firstName-help" class="w-full"
+                                    [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" />
+                                <label class="firstName">First Name</label>
+                            </span>
+                            <small id="firstName-help" *ngIf="submitted && f['firstName'].errors"
+                                class="invalid-feedback">
+                                <div *ngIf="f['firstName'].errors!['required']">First Name is required</div>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6 ">
+                        <div class="field grid">
+                            <span class="p-float-label w-full pr-5">
+                                <input title="lastname" type="text" id="lastName" formControlName="lastName" pInputText
+                                    aria-describedby="lastName-help" class="w-full"
+                                    [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" />
+                                <label class="lastName">Last Name</label>
+                            </span>
+                            <small id="lastName-help" *ngIf="submitted && f['lastName'].errors"
+                                class="invalid-feedback">
+                                <div *ngIf="f['lastName'].errors!['required']">Last Name is required</div>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid pl-5 pt-3">
+                    <div class="col-12 md:col-6 ">
+                        <div class="field grid">
+                            <span class="p-float-label w-full pr-5">
+                                <input title="email" type="email" id="username" formControlName="username" pInputText autocomplete="email"
+                                    aria-describedby="username-help" class="w-full"
+                                    [ngClass]="{ 'is-invalid': submitted && f['username'].errors }" />
+                                <label class="username">Email</label>
+                            </span>
+                            <small id="username-help" *ngIf="submitted && f['username'].errors"
+                                class="invalid-feedback">
+                                <div *ngIf="f['username'].errors!['required']">Username is required</div>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6 ">
+                        <div class="field grid">
+                            <span class="p-float-label w-full pr-5">
+                                <input title="pass" type="password" id="password" formControlName="password" pInputText autocomplete="current-password"
+                                    aria-describedby="password-help" class="w-full"
+                                    [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
+                                <label class="password">Password</label>
+                            </span>
+                            <small id="password-help" *ngIf="submitted && f['password'].errors"
+                                class="invalid-feedback">
+                                <div *ngIf="f['password'].errors!['required']">Password is required</div>
+                                <div *ngIf="f['password'].errors!['minlength']">Password must be at least 8
+                                    characters
+                                </div>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <div class="flex justify-content-between flex-wrap">
+                    <p-button [disabled]="loading" class="btn btn-primary" [loading]="loading"
+                        (onClick)="onSubmit()">Valider
+                    </p-button>
+                    <p-button severity="help" (click)="onCancel()">Annuler</p-button>
+                </div>
+            </ng-template>
+        </p-card>
+    </form>
+</div>
+
+<p-dialog header="Valider votre compte" [(visible)]="visudialog" [style]="{width: '50vw'}">
+    <p-image [src]="qrCode" alt="Image" width="250"></p-image>
+    <p>
+        Veuillez ouvrir votre application d'authenfication pour enregistrer ce nouveau compte.
+    </p>
+    <div class="flex flex-row">
+        <form [formGroup]="formCheck" (ngSubmit)="onCheck()">
+            <label class="form-label">Saisissez le code pour valider votre compte</label>
+            <input title="token" pInputText type="token" formControlName="token"
+                [ngClass]="{ 'is-invalid': submitted && fc['token'].errors }" />
+            <div *ngIf="submitted && fc['token'].errors" class="invalid-feedback">
+                <div *ngIf="fc['token'].errors['required']">Token is required</div>
+            </div>
+            <p-button [disabled]="loading" class="btn btn-primary" [loading]="loading" (onClick)="onCheck()">Valider
+            </p-button>
+        </form>
+    </div>
+</p-dialog>

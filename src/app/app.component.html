@@ -1,36 +1,51 @@
+<app-loader class="progressbar"></app-loader>
+<router-outlet></router-outlet>
+
 <p-toolbar class="authPanel" styleClass="bg-blue-900 shadow-2"
     [style]="{ 'border-radius': '0.5rem', 'background-image': 'linear-gradient(to right, var(--blueblue-500), var(--blueblue-800))' }">
     <ng-template pTemplate="start">
-       <!--  <img (click)="menuApp.toggle($event)" src="assets/labo64.png" height="30" /> -->
         <img title="logo" (click)="sidebarVisible=true" src="assets/labo64.png" height="30" />
     </ng-template>
     <ng-template pTemplate="center">
-        <div class="flex flex-wrap align-items-center gap-3">
-            <button title="home" (click)="goHome()"
-                class="p-link inline-flex justify-content-center align-items-center text-white h-1rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"><i
-                    class="pi pi-home text-xl"></i></button>
-            <!-- <button title="menu" (click)="menuAuth.toggle($event)"
-                class="p-link inline-flex justify-content-center align-items-center text-white h-1rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200">
-                <i *ngIf="isUserLoggedIn" class="pi pi-user" style="font-size: 1.4rem;color: green"></i>
-                <i *ngIf="!isUserLoggedIn" class="pi pi-user" style="font-size: 1.4rem;color: red"></i>
-            </button> -->
-            
-            <button title="folder" 
-                class="p-link inline-flex justify-content-center align-items-center text-white h-1rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"><i
-                    class="pi pi-folder text-xl"></i>
-            </button>  
+        <div class="flex flex-wrap align-items-center pr-5">
+            <div (click)="goHome()"
+                class="justify-content-center align-items-center text-center text-white h-2rem w-4rem border-circle  hover:bg-white-alpha-10 transition-all transition-duration-200">
+                <i class="pi pi-home text-xl text-white"></i>
+                <div class="text-xs text-white font-light">Accueil</div>
+            </div>
+        </div>
+        <div class="flex flex-wrap align-items-center  pr-5">
+            <div (click)="goPage(1)"
+                class="justify-content-center align-items-center text-center text-white h-2rem w-4rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200">
+                <i class="pi pi-home text-xl text-white"></i>
+                <div class="text-xs text-white font-light">Fonction 1</div>
+            </div>
+        </div>
+        <div class="flex flex-wrap align-items-center">
+            <div (click)="goPage(2)"
+                class="justify-content-center align-items-center text-center text-white h-2rem w-4rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200">
+                <i class="pi pi-home text-xl text-white"></i>
+                <div class="text-xs text-white font-light">Fonction 2</div>
+            </div>
         </div>
     </ng-template>
     <ng-template pTemplate="end">
+        <div class="flex align-items-center gap-2">
+            <p-avatar *ngIf="initials" [label]="initials" styleClass="mr-2" shape="circle"
+                [style]="{ 'background-color': '#2196F3', color: '#ffffff' }" (click)="menuAuth.toggle($event)"></p-avatar>
+            <p-avatar *ngIf="!initials" icon="pi pi-user" styleClass="mr-2" shape="circle"
+                [style]="{ 'background-color': 'red', color: '#ffffff' }" (click)="menuAuth.toggle($event)"></p-avatar>
+            <!-- <span *ngIf="userInfo.userName" class="hidden md:block font-bold text-white text-xs">{{userInfo?.userName}}</span> -->
+        </div>
     </ng-template>
 </p-toolbar>
 
-
+<p-tieredMenu #menuAuth [model]="authItems" [popup]="true"></p-tieredMenu>
 
 <p-sidebar [(visible)]="sidebarVisible" position="left">
     <ng-template pTemplate="header">Sma Mobile</ng-template>
     <ng-template pTemplate="content">
-       
+        <p-panelMenu [model]="items" [style]="{'width':'100%'}"></p-panelMenu>
     </ng-template>
     <ng-template pTemplate="footer">Version {{appVer}}</ng-template>
 </p-sidebar>
