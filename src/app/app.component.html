@@ -1,1 +1,36 @@
-<app-navigation></app-navigation>
+<p-toolbar class="authPanel" styleClass="bg-blue-900 shadow-2"
+    [style]="{ 'border-radius': '0.5rem', 'background-image': 'linear-gradient(to right, var(--blueblue-500), var(--blueblue-800))' }">
+    <ng-template pTemplate="start">
+       <!--  <img (click)="menuApp.toggle($event)" src="assets/labo64.png" height="30" /> -->
+        <img title="logo" (click)="sidebarVisible=true" src="assets/labo64.png" height="30" />
+    </ng-template>
+    <ng-template pTemplate="center">
+        <div class="flex flex-wrap align-items-center gap-3">
+            <button title="home" (click)="goHome()"
+                class="p-link inline-flex justify-content-center align-items-center text-white h-1rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"><i
+                    class="pi pi-home text-xl"></i></button>
+            <!-- <button title="menu" (click)="menuAuth.toggle($event)"
+                class="p-link inline-flex justify-content-center align-items-center text-white h-1rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200">
+                <i *ngIf="isUserLoggedIn" class="pi pi-user" style="font-size: 1.4rem;color: green"></i>
+                <i *ngIf="!isUserLoggedIn" class="pi pi-user" style="font-size: 1.4rem;color: red"></i>
+            </button> -->
+            
+            <button title="folder" 
+                class="p-link inline-flex justify-content-center align-items-center text-white h-1rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"><i
+                    class="pi pi-folder text-xl"></i>
+            </button>  
+        </div>
+    </ng-template>
+    <ng-template pTemplate="end">
+    </ng-template>
+</p-toolbar>
+
+
+
+<p-sidebar [(visible)]="sidebarVisible" position="left">
+    <ng-template pTemplate="header">Sma Mobile</ng-template>
+    <ng-template pTemplate="content">
+       
+    </ng-template>
+    <ng-template pTemplate="footer">Version {{appVer}}</ng-template>
+</p-sidebar>
