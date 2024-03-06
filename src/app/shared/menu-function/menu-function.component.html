@@ -13,3 +13,26 @@
         </a>
     </ng-template>
 </p-tabMenu>
+<!-- <p-scroller [items]="items" [itemSize]="50" scrollHeight="200px" orientation="horizontal"
+    styleClass="border-1 surface-border" [style]="{'width': '100%', 'height': '200px'}">
+    <ng-template pTemplate="item" let-item let-options="options">
+        <div class="flex flex-column align-items-center text-center">
+            <span [class]="item.icon"></span>
+            <span class="text-xs"> {{ item.label }}</span>
+
+            <p-badge *ngIf="item.badge" [value]="item.badge" [severity]="item['badgeSeverity']"
+                styleClass="text-xs"></p-badge>
+        </div>
+    </ng-template>
+</p-scroller> -->
+<!-- 
+<div class="flex">
+    <div class="flex" *ngFor="let item of items">
+        <div class="flex flex-column align-items-center text-center">
+            <span [class]="item.icon"></span>
+            <span class="text-xs"> {{ item.label }}</span>
+            <p-badge *ngIf="item.badge" [value]="item.badge" [severity]="item['badgeSeverity']"
+                styleClass="text-xs"></p-badge>
+        </div>
+    </div>
+</div> -->
