@@ -9,7 +9,7 @@ import { BehaviorSubject, Observable, map } from 'rxjs';
   providedIn: 'root'
 })
 export class AccountService {
-  keyUser = 'sma-exp_user';
+  keyUser = 'sma-mobile_user';
   private userSubject: BehaviorSubject<User | null>;
   public user: Observable<User | null>;
 
